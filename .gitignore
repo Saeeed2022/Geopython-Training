@@ -1,0 +1,4 @@
+# generated training data (rebuilt automatically by the notebooks)
+data/
+__pycache__/
+.ipynb_checkpoints/

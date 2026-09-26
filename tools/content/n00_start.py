@@ -1,0 +1,142 @@
+from nbbuild import NB, SETUP
+
+
+def build():
+    nb = NB("00_START_HERE", "00 · Start here — your map of the course")
+    nb.md("""
+    ## What this course is
+
+    You learn **two groups of libraries**, step by step, from easy to professional.
+
+    | Group | Libraries | What they do for you |
+    |---|---|---|
+    | **A · GeoPython** (you run them in Python) | Shapely, PyProj, GeoPandas, Pyogrio/Fiona, Rasterio | Draw and measure shapes, fix coordinates, analyse layers, read/write files, work with images of the ground |
+    | **B1 · Inside PostGIS** (internal engines) | GEOS, PROJ, GDAL | The engines PostGIS calls when you write SQL like `ST_Buffer`, `ST_Transform`, raster functions |
+    | **B2 · Talking to PostGIS** (external, from Python) | Psycopg, SQLAlchemy/GeoAlchemy2, GeoPandas `read_postgis`/`to_postgis` | Connect, send SQL, move tables in and out of the database |
+
+    **One key link:** Shapely and PostGIS both use the **same engine, GEOS**. So a buffer in Shapely and `ST_Buffer` in PostGIS
+    give the same shape. Learn it once in Shapely, and PostGIS will feel familiar.
+
+    Daily picture: GEOS is like one car engine. Shapely is one car built around it, PostGIS is another car.
+    Different dashboards, same engine under the bonnet.
+    """)
+    nb.md("""
+    ## The recommended order (and why)
+
+    Your main goal is **GeoPandas + Shapely**, and **a bit of PostGIS**. So the order is:
+
+    | # | Notebook | Why at this point | Time (approx.) |
+    |---|---|---|---|
+    | 1 | `A1_shapely` | GeoPandas is built on Shapely. First learn one shape, then a table of shapes. | 2 weeks |
+    | 2 | `A2_pyproj` | Every distance or area is wrong if the coordinate system is wrong. Fix this early. | 1 week |
+    | 3 | `A3_geopandas` | **Your main target.** Tables of shapes: joins, overlays, counts, models. | 4 weeks |
+    | 4 | `A4_pyogrio_fiona` | Read and write real files quickly and safely. | 0.5 week |
+    | 5 | `B0_postgis_setup` | Start a database and load Riverton into it. | 0.5 week |
+    | 6 | `B1_postgis_internal` | See GEOS, PROJ, GDAL at work inside SQL. | 1.5 weeks |
+    | 7 | `B2_psycopg` | Send SQL from Python safely. | 0.5 week |
+    | 8 | `B3_sqlalchemy_geoalchemy2` | Connections and tables as Python objects. | 0.5 week |
+    | 9 | `B4_geopandas_postgis` | The bridge you will use most: `read_postgis` / `to_postgis`. | 1 week |
+    | 10 | `A5_rasterio` | Rasters (elevation, satellite). Useful, but last for your goal. | 1.5 weeks |
+    | 11 | `C_capstone` | One Riverton project that combines everything. | 1 week |
+
+    So in total about **14 weeks at ~5 hours per week**. You can go faster; you should not skip the tests.
+
+    This order follows two well-known open courses: the University of Helsinki's
+    [Automating GIS Processes](https://autogis-site.readthedocs.io/) (Shapely → GeoPandas → CRS → spatial joins/overlay → rasters)
+    and the official [Introduction to PostGIS workshop](https://postgis.net/workshops/postgis-intro/)
+    (geometries → relationships → joins → indexes → projections → geography → rasters).
+    """)
+    nb.md("""
+    ## How every exercise works (the same 4 steps each time)
+
+    1. **Purpose** — what does this command do? (one sentence, your own words)
+    2. **Real life** — where would a planner or analyst use it?
+    3. **Hint** — hidden. Open it only after you tried.
+    4. **Code** — fill the blanks `____`, run the cell, look at the result.
+
+    Then open **✅ Solution** and compare. Being wrong first is fine: that is where learning happens.
+
+    Each notebook has **4 levels**:
+
+    | Level | Name | What you do |
+    |---|---|---|
+    | 1 | Basics | Create and look at things |
+    | 2 | Core tools | One command, one job |
+    | 3 | Combining | Chains of commands = a small workflow |
+    | 4 | Professional | Real questions: first name the **type of question**, then plan, then code |
+
+    Every notebook ends with a **🏁 Final test**: *"We want to do A, B, C, D in Riverton — how do you do it with this library?"*
+    plus **modelling questions**: *"We want to check X in the region — how do we model it geographically?"*
+    """)
+    nb.md("""
+    ## The 8 types of spatial question (used in all Level 4 exercises)
+
+    A professional first asks: **what kind of question is this?** The type tells you which tools to pick.
+
+    | Type | The question sounds like… | Daily example | Typical tools |
+    |---|---|---|---|
+    | **Descriptive** | What is where? How many? | "How many bakeries are in my district?" | filter, count, `sjoin` + `groupby` |
+    | **Measurement** | How long, how big, how far? | "How long is my walk to work?" | `length`, `area`, `distance` (in metres!) |
+    | **Proximity** | What is near what? | "Which pharmacy is closest to me?" | `buffer`, `sjoin_nearest`, `ST_DWithin` |
+    | **Overlay** | Where do layers overlap? | "Which part of my garden is in the shade *and* has good soil?" | `intersection`, `overlay`, `clip` |
+    | **Statistical** | Is this pattern real or just chance? | "Are accidents really more frequent near main roads, or did we just notice them more?" | compare with random points, correlation, Moran's I |
+    | **Modelling** | How can we represent a process with shapes and numbers? | "If a school takes children from its nearest area, which schools are overcrowded?" | assumptions + joins + formulas |
+    | **Decision / suitability** | Where is the best place for X? | "Where should I put my tent: flat, near water, not in the flood zone?" | overlay of rules, scoring |
+    | **Temporal** | How does it change over time? | "When are the roads busiest?" | `groupby` on dates/hours |
+
+    Keep this table open. In Level 4 you will be asked: *"Step 1 · What type of question is this?"*
+    """)
+    nb.md("## Check your environment\n\nRun the next cell. If something is missing, install it with `pip install -r ../requirements.txt`.")
+    nb.code("""
+    import importlib
+    for lib in ["shapely", "pyproj", "geopandas", "pyogrio", "fiona", "rasterio",
+                "psycopg", "sqlalchemy", "geoalchemy2", "matplotlib"]:
+        try:
+            m = importlib.import_module(lib)
+            print(f"✅ {lib:12s} {getattr(m, '__version__', '')}")
+        except ImportError:
+            print(f"❌ {lib:12s} missing -> pip install {lib}")
+    """)
+    nb.md("## Meet Riverton, your training town\n\nAll notebooks use the same fictional town, so you learn the libraries, not a new dataset each time.")
+    nb.code(SETUP)
+    nb.code("""
+    import geopandas as gpd
+    import matplotlib.pyplot as plt
+    import pyogrio
+
+    print(pyogrio.list_layers(GPKG))
+    nbh = gpd.read_file(GPKG, layer="neighbourhoods")
+    ax = nbh.plot(column="population", cmap="Blues", edgecolor="grey", figsize=(6, 6), legend=True)
+    for layer, style in [("river", dict(color="steelblue", linewidth=3)),
+                         ("roads", dict(color="black", linewidth=1)),
+                         ("parks", dict(color="green", alpha=.5)),
+                         ("schools", dict(color="orange", markersize=40)),
+                         ("clinics", dict(color="red", marker="+", markersize=80))]:
+        gpd.read_file(GPKG, layer=layer).plot(ax=ax, **style)
+    nbh.apply(lambda r: ax.annotate(r["name"], r.geometry.centroid.coords[0], ha="center", fontsize=8), axis=1)
+    ax.set_title("Riverton (EPSG:32633, metres)")
+    plt.show()
+    """)
+    nb.md("""
+    | Layer | Shape | What it holds |
+    |---|---|---|
+    | `neighbourhoods` | polygons (9) | name, population, median income, % over 65 |
+    | `river` | line | the river *Riv* |
+    | `roads` | lines (7) | name, `road_type` (primary/secondary), speed |
+    | `schools` | points (6) | capacity, students |
+    | `clinics` | points (3) | number of doctors |
+    | `parks` | polygons (3) | park name |
+    | `houses` | points (~1600) | one point = one building with 40 residents |
+    | `accidents` | points (260) | date, hour, severity |
+    | `sensors` | points (18) | air quality, PM2.5 (µg/m³) |
+    | `shops_wgs84.csv` | plain table | shop kind + GPS lon/lat |
+    | `dem.tif` / `satellite.tif` | rasters | elevation / red + near-infrared bands |
+    """)
+    nb.reflect("""
+    Before you start, write 3 short lines. You will come back to them at the end of each notebook.
+
+    1. **Why** do you want these skills? (e.g. PhD chapter, a job, a city project)
+    2. **What one real question** would you like to answer with them in 3 months? (e.g. "Which districts lost green space?")
+    3. **Which data** would you need for it, and where could you get it? (e.g. OpenStreetMap, census, satellite)
+    """)
+    return nb
