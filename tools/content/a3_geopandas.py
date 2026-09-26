@@ -398,7 +398,7 @@ def build():
            The real mean is far smaller than any random mean, so p = 0.005 (the smallest possible with 199 runs): the clustering is **not chance**.
            Caution: random points should really be placed where accidents *can* happen (on streets, where people are). A fairer 'null model' would place random points on all roads.
            """,
-           why="Statistical questions ask 'is it real?'. Monte Carlo (simulate chance many times) is simple and works for almost any spatial pattern. Next steps: Moran's I and hot-spot analysis with the `esda` library.")
+           why="Statistical questions ask 'is it real?'. Monte Carlo (simulate chance many times) is simple and works for almost any spatial pattern. Next step: Moran's I, hot spots and spatial regression with PySAL in notebook **A6**.")
     nb.pro("4.4", "Which primary schools are overcrowded? (demand model)", "Modelling (supply and demand)",
            scenario="Assume every house sends its children to the **nearest primary school**, and 5 % of residents are of primary-school age. Compare the modelled demand with each school's capacity.",
            plan_hint="1) keep primary schools, 2) `sjoin_nearest(houses, primary_schools)`, 3) children = residents × 0.05, 4) sum per school, 5) compare with `capacity` → ratio > 1 = overcrowded.",

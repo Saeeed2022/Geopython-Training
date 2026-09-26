@@ -281,7 +281,7 @@ def build():
            answer="""
            A 'bathtub' model: water fills every cell below a level. Better than a buffer because it follows the terrain.
            Its limits: it ignores whether low cells are **connected** to the river (a hollow behind a dyke would not flood), and it ignores dykes, drains and flow speed.
-           Next step: keep only flood polygons that touch the river (`polys[polys.intersects(line)]`).
+           Next step: keep only flood polygons that touch the river (`polys[polys.intersects(line)]`). GRASS `r.lake` does this properly (D3 3.2), and SAGA's height above channels gives another model (D4 3.2).
            """,
            why="Moving between raster (cells) and vector (polygons, points) is a core professional skill: `sample`/`rowcol` (vector → raster value) and `shapes`/`rasterize` (raster ↔ vector).")
     nb.pro("4.2", "Are richer neighbourhoods greener?", "Statistical (correlation)",

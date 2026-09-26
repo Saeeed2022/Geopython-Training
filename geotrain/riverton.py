@@ -117,13 +117,21 @@ def make_riverton(seed: int = 42) -> dict:
     # --- traffic accidents (points, with time) -------------------------
     primary = roads[roads.road_type == "primary"].geometry.union_all()
     n_acc = 260
-    on_road = int(n_acc * 0.75)
+    on_road = int(n_acc * 0.50)
     pos = rng.uniform(0, primary.length, on_road)
     near = [primary.interpolate(p) for p in pos]
     jitter = rng.normal(0, 40, (on_road, 2))
     acc_pts = [Point(p.x + dx, p.y + dy) for p, (dx, dy) in zip(near, jitter)]
-    acc_pts += [Point(x, y) for x, y in zip(rng.uniform(X0, X0 + SIZE, n_acc - on_road),
-                                           rng.uniform(Y0, Y0 + SIZE, n_acc - on_road))]
+    # three dangerous junctions ("black spots"): a quarter of all accidents
+    junctions = [(X0 + 3000, Y0 + 3000), (X0 + 3000, Y0 + 1500), (X0 + 500, Y0 + 3000)]
+    n_junc = int(n_acc * 0.25)
+    for k in range(n_junc):
+        jx, jy = junctions[k % 3]
+        dx, dy = rng.normal(0, 90, 2)
+        acc_pts.append(Point(jx + dx, jy + dy))
+    n_rand = n_acc - on_road - n_junc
+    acc_pts += [Point(x, y) for x, y in zip(rng.uniform(X0, X0 + SIZE, n_rand),
+                                           rng.uniform(Y0, Y0 + SIZE, n_rand))]
     dates = pd.to_datetime("2025-01-01") + pd.to_timedelta(rng.integers(0, 365, n_acc), unit="D")
     hours = rng.choice(np.arange(24), n_acc, p=_hour_weights())
     accidents = gpd.GeoDataFrame(

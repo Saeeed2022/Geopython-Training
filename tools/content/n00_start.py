@@ -6,18 +6,20 @@ def build():
     nb.md("""
     ## What this course is
 
-    You learn **two groups of libraries**, step by step, from easy to professional.
+    You learn **three groups of tools**, step by step, from easy to professional.
 
-    | Group | Libraries | What they do for you |
+    | Group | Libraries / tools | What they do for you |
     |---|---|---|
-    | **A · GeoPython** (you run them in Python) | Shapely, PyProj, GeoPandas, Pyogrio/Fiona, Rasterio | Draw and measure shapes, fix coordinates, analyse layers, read/write files, work with images of the ground |
+    | **A · GeoPython** (you run them in Python) | Shapely, PyProj, GeoPandas, Pyogrio/Fiona, Rasterio, **PySAL** | Draw and measure shapes, fix coordinates, analyse layers, read/write files, work with images of the ground, test spatial patterns statistically |
     | **B1 · Inside PostGIS** (internal engines) | GEOS, PROJ, GDAL | The engines PostGIS calls when you write SQL like `ST_Buffer`, `ST_Transform`, raster functions |
     | **B2 · Talking to PostGIS** (external, from Python) | Psycopg, SQLAlchemy/GeoAlchemy2, GeoPandas `read_postgis`/`to_postgis` | Connect, send SQL, move tables in and out of the database |
+    | **D · Desktop GIS engines** (QGIS Processing toolbox, from Jupyter) | QGIS native, GDAL/OGR, GRASS GIS, SAGA GIS | Buffers, overlays, repair, joins, networks (QGIS); convert, reproject, clip (GDAL/OGR); hydrology, terrain, environmental models (GRASS, SAGA) |
 
-    **One key link:** Shapely and PostGIS both use the **same engine, GEOS**. So a buffer in Shapely and `ST_Buffer` in PostGIS
-    give the same shape. Learn it once in Shapely, and PostGIS will feel familiar.
+    **One key link:** Shapely, PostGIS and QGIS all use the **same engine, GEOS**, for geometry. And Rasterio, Pyogrio,
+    PostGIS rasters and QGIS all use **GDAL** for files. So a buffer in Shapely, `ST_Buffer` in PostGIS and `native:buffer`
+    in QGIS give the same shape. Learn it once, and the other tools feel familiar.
 
-    Daily picture: GEOS is like one car engine. Shapely is one car built around it, PostGIS is another car.
+    Daily picture: GEOS is like one car engine. Shapely, PostGIS and QGIS are three cars built around it.
     Different dashboards, same engine under the bonnet.
     """)
     nb.md("""
@@ -31,20 +33,29 @@ def build():
     | 2 | `A2_pyproj` | Every distance or area is wrong if the coordinate system is wrong. Fix this early. | 1 week |
     | 3 | `A3_geopandas` | **Your main target.** Tables of shapes: joins, overlays, counts, models. | 4 weeks |
     | 4 | `A4_pyogrio_fiona` | Read and write real files quickly and safely. | 0.5 week |
-    | 5 | `B0_postgis_setup` | Start a database and load Riverton into it. | 0.5 week |
-    | 6 | `B1_postgis_internal` | See GEOS, PROJ, GDAL at work inside SQL. | 1.5 weeks |
-    | 7 | `B2_psycopg` | Send SQL from Python safely. | 0.5 week |
-    | 8 | `B3_sqlalchemy_geoalchemy2` | Connections and tables as Python objects. | 0.5 week |
-    | 9 | `B4_geopandas_postgis` | The bridge you will use most: `read_postgis` / `to_postgis`. | 1 week |
-    | 10 | `A5_rasterio` | Rasters (elevation, satellite). Useful, but last for your goal. | 1.5 weeks |
-    | 11 | `C_capstone` | One Riverton project that combines everything. | 1 week |
+    | 5 | `A6_pysal` | Statistical questions: "is this pattern real or chance?" Moran's I, hot spots, spatial regression. | 1.5 weeks |
+    | 6 | `B0_postgis_setup` | Start a database and load Riverton into it. | 0.5 week |
+    | 7 | `B1_postgis_internal` | See GEOS, PROJ, GDAL at work inside SQL. | 1.5 weeks |
+    | 8 | `B2_psycopg` | Send SQL from Python safely. | 0.5 week |
+    | 9 | `B3_sqlalchemy_geoalchemy2` | Connections and tables as Python objects. | 0.5 week |
+    | 10 | `B4_geopandas_postgis` | The bridge you will use most: `read_postgis` / `to_postgis`. | 1 week |
+    | 11 | `A5_rasterio` | Rasters (elevation, satellite). Needed before GRASS and SAGA. | 1.5 weeks |
+    | 12 | `D0_desktop_gis_setup` | Install and check QGIS, GDAL, GRASS, SAGA. | 0.5 week |
+    | 13 | `D1_qgis_native` | QGIS Processing tools from Python: overlays, repair, joins, networks. | 1 week |
+    | 14 | `D2_gdal_ogr` | The command-line toolbox for converting, reprojecting and clipping. | 1 week |
+    | 15 | `D3_grass` | Hydrology, terrain, visibility, cost surfaces. | 1 week |
+    | 16 | `D4_saga` | Terrain and hydrology indices (wetness, height above channels, landforms). | 0.5 week |
+    | 17 | `C_capstone` | One Riverton project that combines everything. | 1 week |
 
-    So in total about **14 weeks at ~5 hours per week**. You can go faster; you should not skip the tests.
+    So in total about **20 weeks at ~5 hours per week**. You can go faster; you should not skip the tests.
+    If time is short, do 1–10 and 17 first (your main goal), then add 11–16.
 
     This order follows two well-known open courses: the University of Helsinki's
     [Automating GIS Processes](https://autogis-site.readthedocs.io/) (Shapely → GeoPandas → CRS → spatial joins/overlay → rasters)
     and the official [Introduction to PostGIS workshop](https://postgis.net/workshops/postgis-intro/)
     (geometries → relationships → joins → indexes → projections → geography → rasters).
+    The PySAL notebook follows the structure of *Geographic Data Science with Python* (Rey, Arribas-Bel & Wolf):
+    weights → spatial autocorrelation → local statistics → spatial regression.
     """)
     nb.md("""
     ## How every exercise works (the same 4 steps each time)
@@ -79,23 +90,27 @@ def build():
     | **Measurement** | How long, how big, how far? | "How long is my walk to work?" | `length`, `area`, `distance` (in metres!) |
     | **Proximity** | What is near what? | "Which pharmacy is closest to me?" | `buffer`, `sjoin_nearest`, `ST_DWithin` |
     | **Overlay** | Where do layers overlap? | "Which part of my garden is in the shade *and* has good soil?" | `intersection`, `overlay`, `clip` |
-    | **Statistical** | Is this pattern real or just chance? | "Are accidents really more frequent near main roads, or did we just notice them more?" | compare with random points, correlation, Moran's I |
+    | **Statistical** | Is this pattern real or just chance? | "Are accidents really more frequent near main roads, or did we just notice them more?" | compare with random points, correlation, PySAL: Moran's I, hot spots, spatial regression |
     | **Modelling** | How can we represent a process with shapes and numbers? | "If a school takes children from its nearest area, which schools are overcrowded?" | assumptions + joins + formulas |
-    | **Decision / suitability** | Where is the best place for X? | "Where should I put my tent: flat, near water, not in the flood zone?" | overlay of rules, scoring |
+    | **Decision / suitability** | Where is the best place for X? | "Where should I put my tent: flat, near water, not in the flood zone?" | overlay of rules, scoring, terrain from GRASS/SAGA |
     | **Temporal** | How does it change over time? | "When are the roads busiest?" | `groupby` on dates/hours |
 
     Keep this table open. In Level 4 you will be asked: *"Step 1 · What type of question is this?"*
     """)
     nb.md("## Check your environment\n\nRun the next cell. If something is missing, install it with `pip install -r ../requirements.txt`.")
     nb.code("""
-    import importlib
+    import importlib, shutil
     for lib in ["shapely", "pyproj", "geopandas", "pyogrio", "fiona", "rasterio",
+                "libpysal", "esda", "mapclassify", "spreg", "pointpats",
                 "psycopg", "sqlalchemy", "geoalchemy2", "matplotlib"]:
         try:
             m = importlib.import_module(lib)
             print(f"✅ {lib:12s} {getattr(m, '__version__', '')}")
         except ImportError:
             print(f"❌ {lib:12s} missing -> pip install {lib}")
+    # desktop engines (group D) are programs, not Python packages
+    for tool in ["qgis_process", "gdalinfo", "ogr2ogr", "grass", "saga_cmd"]:
+        print(("✅ " if shutil.which(tool) else "⚪ ") + f"{tool:12s}" + ("" if shutil.which(tool) else " not found (needed only for group D, see D0)"))
     """)
     nb.md("## Meet Riverton, your training town\n\nAll notebooks use the same fictional town, so you learn the libraries, not a new dataset each time.")
     nb.code(SETUP)

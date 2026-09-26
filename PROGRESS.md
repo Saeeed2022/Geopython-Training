@@ -9,12 +9,18 @@ Tick a box when you finish a level. Write the date and one line on what was hard
 | A2 PyProj | [ ] | [ ] | [ ] | [ ] | [ ] | |
 | A3 GeoPandas ⭐ | [ ] | [ ] | [ ] | [ ] | [ ] | |
 | A4 Pyogrio / Fiona | [ ] | [ ] | [ ] | [ ] | [ ] | |
+| A6 PySAL (spatial statistics) | [ ] | [ ] | [ ] | [ ] | [ ] | |
 | B0 PostGIS setup | [ ] | [ ] | – | – | – | |
 | B1 Inside PostGIS (GEOS, PROJ, GDAL) | [ ] | [ ] | [ ] | [ ] | [ ] | |
 | B2 Psycopg | [ ] | [ ] | [ ] | [ ] | [ ] | |
 | B3 SQLAlchemy / GeoAlchemy2 | [ ] | [ ] | [ ] | [ ] | [ ] | |
 | B4 GeoPandas ⇄ PostGIS | [ ] | [ ] | [ ] | [ ] | [ ] | |
 | A5 Rasterio | [ ] | [ ] | [ ] | [ ] | [ ] | |
+| D0 Desktop GIS setup | [ ] | – | – | – | – | |
+| D1 QGIS native | [ ] | [ ] | [ ] | [ ] | [ ] | |
+| D2 GDAL / OGR | [ ] | [ ] | [ ] | [ ] | [ ] | |
+| D3 GRASS GIS | [ ] | [ ] | [ ] | [ ] | [ ] | |
+| D4 SAGA GIS | [ ] | [ ] | [ ] | [ ] | [ ] | |
 | C Capstone | – | – | – | – | [ ] | |
 
 ## My long-term plan (copy from the reflection in 00_START_HERE)

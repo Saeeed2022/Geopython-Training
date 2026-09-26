@@ -17,7 +17,7 @@ def build():
 
     Model answers are hidden under each task. Try first; compare after.
 
-    ⚙️ Needs the PostGIS database from B0 (for tasks 2 and 6). The other tasks run without it.
+    ⚙️ Needs the PostGIS database from B0 (for tasks 2 and 7). Bonus task 9 needs GRASS and SAGA (group D). The other tasks run without them.
     """)
     nb.md("""
     ## Step 0 · Your project plan (write before coding)
@@ -31,6 +31,8 @@ def build():
     | 5 | Heat/age vulnerability index | … | … | … |
     | 6 | Best sites for the clinic and the school | … | … | … |
     | 7 | Deliver: map + table + data | … | … | … |
+    | 8 (bonus) | Accident hot spots, tested properly | … | … | … |
+    | 9 (bonus) | A third flood model from GRASS or SAGA | … | … | … |
     """)
     nb.code(SETUP)
     nb.code("""
@@ -199,10 +201,50 @@ def build():
         ```
         Your written recommendation should have 3 parts: **what** (the two sites), **why** (scores and rules), **how sure** (assumptions + sensitivity).
         """),
+        ("stat", """
+        **Task 8 (bonus) · Accident hot spots with PySAL.** On a 500 m grid, find accident hot spots with Getis-Ord Gi*, keep only those that survive
+        the False Discovery Rate, and say which roads or junctions they are on. Does this agree with Task 4?
+        """, """
+        Type: statistical (local). Libraries: GeoPandas (grid + counts), PySAL (`libpysal`, `esda`).
+        ```python
+        import esda
+        from libpysal import weights
+        from shapely.geometry import box
+        cells = gpd.GeoDataFrame(geometry=[box(x, y, x + 500, y + 500) for y in range(5_818_000, 5_824_000, 500)
+                                           for x in range(390_000, 396_000, 500)], crs=nbh.crs)
+        cells["acc"] = gpd.sjoin(L["accidents"], cells, predicate="within").groupby("index_right").size().reindex(cells.index, fill_value=0).astype(float)
+        gi = esda.G_Local(cells["acc"], weights.Queen.from_dataframe(cells, use_index=False), transform="B", star=True, seed=1)
+        hot = cells[(gi.Zs > 0) & (gi.p_norm <= esda.fdr(gi.p_norm, 0.05))]
+        print(len(hot), "hot cells after FDR")
+        print(gpd.sjoin(L["roads"], hot, predicate="intersects")["name"].value_counts())
+        ```
+        Task 4 said "accidents are closer to main roads than chance" (global). Gi* says **where** (local): the hot cells sit on the main roads and their junctions.
+        """),
+        ("model", """
+        **Task 9 (bonus) · A third flood model.** Add the GRASS `r.lake` model (connected water, 3 m above the lowest river point) or the SAGA
+        'height above channel < 2 m' model to Task 3. How many residents does each model find? Which model would you present to the mayor, and how?
+        """, """
+        ```python
+        from geotrain.desktop import qrun, grass_alg, enable_grass, sh
+        enable_grass()
+        out = DATA_DIR / "d_out"; out.mkdir(exist_ok=True)
+        with rasterio.open(DATA_DIR / "dem.tif") as dem:
+            pts = [river.interpolate(d) for d in np.arange(300, river.length - 300, 50)]
+            el = np.ma.array([v[0] for v in dem.sample([(p.x, p.y) for p in pts], masked=True)])
+        seed = pts[int(el.argmin())]
+        lake = qrun(grass_alg("r.lake"), elevation=str(DATA_DIR / "dem.tif"), water_level=float(el.min()) + 3,
+                    coordinates=f"{seed.x},{seed.y}", lake=str(out / "cap_lake.tif"))
+        with rasterio.open(lake["lake"]) as lk:
+            H["flood_C"] = ~np.ma.array([v[0] for v in lk.sample(list(zip(H.geometry.x, H.geometry.y)), masked=True)]).mask
+        print({m: int(H.loc[H[m], "residents"].sum()) for m in ["flood_A", "flood_B", "flood_C"]})
+        ```
+        The three models give very different numbers. Present them **as a range** ("between X and Y residents, depending on the model"),
+        explain each model in one sentence, and recommend an official hydraulic flood study for the final decision.
+        """),
     ])
     nb.reflect("""
     Look back at the three lines you wrote in `00_START_HERE`.
     1. Can you now answer the question you wrote there? Which steps are still missing?
-    2. What is your **next 3-month plan**? (Suggested next topics: networks with OSMnx / pgRouting, spatial statistics with PySAL/esda, interactive maps with folium or lonboard, and your own city's open data.)
+    2. What is your **next 3-month plan**? (Suggested next topics: street networks with OSMnx / pgRouting, geographically weighted regression with `mgwr`, interactive maps with folium or lonboard, and your own city's open data.)
     """)
     return nb

@@ -1,22 +1,24 @@
 # GeoPython & PostGIS training — step by step, easy to professional
 
-A hands-on course in Jupyter notebooks for two groups of libraries:
+A hands-on course in Jupyter notebooks for three groups of tools:
 
 | Group | Libraries | Notebooks |
 |---|---|---|
-| **A · GeoPython** | Shapely, PyProj, GeoPandas, Pyogrio/Fiona, Rasterio | `A1`–`A5` |
+| **A · GeoPython** | Shapely, PyProj, GeoPandas, Pyogrio/Fiona, Rasterio, PySAL | `A1`–`A6` |
 | **B · PostGIS, internal** (engines inside the database) | GEOS, PROJ, GDAL | `B1` |
 | **B · PostGIS, external** (Python talks to the database) | Psycopg, SQLAlchemy/GeoAlchemy2, GeoPandas `read_postgis`/`to_postgis` | `B0`, `B2`–`B4` |
+| **D · Desktop GIS engines** (QGIS Processing toolbox, run from Jupyter) | QGIS native, GDAL/OGR, GRASS GIS, SAGA GIS | `D0`–`D4` |
 | **Capstone** | everything together | `C` |
 
 The main focus is **GeoPandas and Shapely**, then **some PostGIS**.
 
 ## Recommended order
 
-`00_START_HERE` → `A1_shapely` → `A2_pyproj` → **`A3_geopandas`** → `A4_pyogrio_fiona` → `B0_postgis_setup` →
-`B1_postgis_internal` → `B2_psycopg` → `B3_sqlalchemy_geoalchemy2` → `B4_geopandas_postgis` → `A5_rasterio` → `C_capstone`
+`00_START_HERE` → `A1_shapely` → `A2_pyproj` → **`A3_geopandas`** → `A4_pyogrio_fiona` → `A6_pysal` → `B0_postgis_setup` →
+`B1_postgis_internal` → `B2_psycopg` → `B3_sqlalchemy_geoalchemy2` → `B4_geopandas_postgis` → `A5_rasterio` →
+`D0_desktop_gis_setup` → `D1_qgis_native` → `D2_gdal_ogr` → `D3_grass` → `D4_saga` → `C_capstone`
 
-About 14 weeks at ~5 hours a week. `00_START_HERE` explains why this order is used.
+About 20 weeks at ~5 hours a week. `00_START_HERE` explains why this order is used.
 
 ## How each exercise works
 
@@ -50,6 +52,10 @@ docker run --name geotrain-db -e POSTGRES_USER=geo -e POSTGRES_PASSWORD=geo -e P
 If your database address is different, set `GEOTRAIN_DSN` (the default is `postgresql://geo:geo@localhost:5432/geotrain`).
 `B0_postgis_setup` has more options (installers, Colab).
 
+For group D you need QGIS (with its `qgis_process` command-line tool and the GRASS provider), the GDAL command-line tools, and SAGA.
+`D0_desktop_gis_setup` shows how to install them on Windows, macOS, Linux or conda. The notebooks run QGIS tools through `qgis_process`,
+so they work from any Jupyter, even when QGIS uses a different Python.
+
 Track your progress in [`PROGRESS.md`](PROGRESS.md).
 
 ## For maintainers
@@ -58,10 +64,12 @@ The notebooks are generated from `tools/content/*.py`:
 
 ```bash
 python tools/build_all.py        # rewrite notebooks/
-python tools/check_solutions.py  # run every solution and model answer as a test (needs PostGIS for B*)
+python tools/check_solutions.py  # run every solution and model answer as a test (needs PostGIS for B*, QGIS/GRASS/SAGA/GDAL for D*)
 ```
 
 ## Sources that shaped the syllabus
 
 - University of Helsinki, [Automating GIS Processes](https://autogis-site.readthedocs.io/)
 - PostGIS, [Introduction to PostGIS workshop](https://postgis.net/workshops/postgis-intro/) and [training materials](https://postgis.net/documentation/training/)
+- Rey, Arribas-Bel & Wolf, [Geographic Data Science with Python](https://geographicdata.science/book/) (structure of the PySAL notebook)
+- QGIS documentation, [Using processing from the command line (`qgis_process`)](https://docs.qgis.org/latest/en/docs/user_manual/processing/standalone.html)
