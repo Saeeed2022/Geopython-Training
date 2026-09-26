@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_b
 
 
 def build():
@@ -391,6 +392,7 @@ def build():
         Use GeoPandas afterwards to read the **small result** (per neighbourhood) for maps and models.
         """),
     ])
+    projects_b.p_b1(nb)
     nb.reflect("""
     Make your own translation table with 5 rows: Shapely/PyProj/Rasterio command → PostGIS function → internal library.
     (Example: `buffer` → `ST_Buffer` → GEOS.) Keep it; you will use it in B4 and the capstone.

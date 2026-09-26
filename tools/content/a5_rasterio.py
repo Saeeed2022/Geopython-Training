@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_a
 
 
 def build():
@@ -380,6 +381,7 @@ def build():
         Recommendation: use the finest DEM available and resample others to it, not the other way round.
         """),
     ])
+    projects_a.p_a5(nb)
     nb.reflect("""
     Do you need rasters in your own project (height, land cover, satellite images, night lights)? Write one question where a raster gives information that no vector layer can.
     """)

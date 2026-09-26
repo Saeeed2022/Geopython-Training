@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_b
 
 
 def build():
@@ -172,4 +173,5 @@ def build():
 
     If all cells ran, your database holds Riverton. Go on with **B1** (the internal libraries). Keep the database running.
     """)
+    projects_b.p_b0(nb)
     return nb

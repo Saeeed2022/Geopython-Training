@@ -1,5 +1,6 @@
 from nbbuild import NB, SETUP
 from d0_desktop_setup import DSETUP
+import projects_d
 
 
 def build():
@@ -366,6 +367,7 @@ def build():
         Assumptions: walking speed, no slopes (GRASS `r.walk` can add slope effects, D3), barriers like rivers only crossable at bridges.
         """),
     ])
+    projects_d.p_d1(nb)
     nb.reflect("""
     Which QGIS tools do you already use by clicking? Pick one of your own workflows and write the list of `native:` tool ids it uses — that is your first script.
     """)

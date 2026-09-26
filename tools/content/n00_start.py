@@ -1,4 +1,4 @@
-from nbbuild import NB, SETUP
+from nbbuild import NB, SETUP, QGIS_HELP
 
 
 def build():
@@ -11,6 +11,7 @@ def build():
     | Group | Libraries / tools | What they do for you |
     |---|---|---|
     | **A · GeoPython** (you run them in Python) | Shapely, PyProj, GeoPandas, Pyogrio/Fiona, Rasterio, **PySAL** | Draw and measure shapes, fix coordinates, analyse layers, read/write files, work with images of the ground, test spatial patterns statistically |
+    | **S · SQL and PostgreSQL** (the database language) | SQL (SELECT, WHERE, GROUP BY, JOIN…), PostgreSQL (tables, keys, indexes, views, users) | Ask questions to a database, and build one properly — the ground floor for PostGIS |
     | **B1 · Inside PostGIS** (internal engines) | GEOS, PROJ, GDAL | The engines PostGIS calls when you write SQL like `ST_Buffer`, `ST_Transform`, raster functions |
     | **B2 · Talking to PostGIS** (external, from Python) | Psycopg, SQLAlchemy/GeoAlchemy2, GeoPandas `read_postgis`/`to_postgis` | Connect, send SQL, move tables in and out of the database |
     | **D · Desktop GIS engines** (QGIS Processing toolbox, from Jupyter) | QGIS native, GDAL/OGR, GRASS GIS, SAGA GIS | Buffers, overlays, repair, joins, networks (QGIS); convert, reproject, clip (GDAL/OGR); hydrology, terrain, environmental models (GRASS, SAGA) |
@@ -34,21 +35,23 @@ def build():
     | 3 | `A3_geopandas` | **Your main target.** Tables of shapes: joins, overlays, counts, models. | 4 weeks |
     | 4 | `A4_pyogrio_fiona` | Read and write real files quickly and safely. | 0.5 week |
     | 5 | `A6_pysal` | Statistical questions: "is this pattern real or chance?" Moran's I, hot spots, spatial regression. | 1.5 weeks |
-    | 6 | `B0_postgis_setup` | Start a database and load Riverton into it. | 0.5 week |
-    | 7 | `B1_postgis_internal` | See GEOS, PROJ, GDAL at work inside SQL. | 1.5 weeks |
-    | 8 | `B2_psycopg` | Send SQL from Python safely. | 0.5 week |
-    | 9 | `B3_sqlalchemy_geoalchemy2` | Connections and tables as Python objects. | 0.5 week |
-    | 10 | `B4_geopandas_postgis` | The bridge you will use most: `read_postgis` / `to_postgis`. | 1 week |
-    | 11 | `A5_rasterio` | Rasters (elevation, satellite). Needed before GRASS and SAGA. | 1.5 weeks |
-    | 12 | `D0_desktop_gis_setup` | Install and check QGIS, GDAL, GRASS, SAGA. | 0.5 week |
-    | 13 | `D1_qgis_native` | QGIS Processing tools from Python: overlays, repair, joins, networks. | 1 week |
-    | 14 | `D2_gdal_ogr` | The command-line toolbox for converting, reprojecting and clipping. | 1 week |
-    | 15 | `D3_grass` | Hydrology, terrain, visibility, cost surfaces. | 1 week |
-    | 16 | `D4_saga` | Terrain and hydrology indices (wetness, height above channels, landforms). | 0.5 week |
-    | 17 | `C_capstone` | One Riverton project that combines everything. | 1 week |
+    | 6 | `S1_sql_foundations` | SQL: SELECT, WHERE, GROUP BY, JOIN — the language of every database. | 1.5 weeks |
+    | 7 | `S2_postgresql` | PostgreSQL: build tables with rules, load data, indexes, views, users. | 1 week |
+    | 8 | `B0_postgis_setup` | Switch on PostGIS and load Riverton into it. | 0.5 week |
+    | 9 | `B1_postgis_internal` | See GEOS, PROJ, GDAL at work inside SQL. | 1.5 weeks |
+    | 10 | `B2_psycopg` | Send SQL from Python safely. | 0.5 week |
+    | 11 | `B3_sqlalchemy_geoalchemy2` | Connections and tables as Python objects. | 0.5 week |
+    | 12 | `B4_geopandas_postgis` | The bridge you will use most: `read_postgis` / `to_postgis`. | 1 week |
+    | 13 | `A5_rasterio` | Rasters (elevation, satellite). Needed before GRASS and SAGA. | 1.5 weeks |
+    | 14 | `D0_desktop_gis_setup` | Check QGIS, GDAL, GRASS, SAGA from Jupyter. | 0.5 week |
+    | 15 | `D1_qgis_native` | QGIS Processing tools from Python: overlays, repair, joins, networks. | 1 week |
+    | 16 | `D2_gdal_ogr` | The command-line toolbox for converting, reprojecting and clipping. | 1 week |
+    | 17 | `D3_grass` | Hydrology, terrain, visibility, cost surfaces. | 1 week |
+    | 18 | `D4_saga` | Terrain and hydrology indices (wetness, height above channels, landforms). | 0.5 week |
+    | 19 | `C_capstone` | One Riverton project that combines everything. | 1 week |
 
-    So in total about **20 weeks at ~5 hours per week**. You can go faster; you should not skip the tests.
-    If time is short, do 1–10 and 17 first (your main goal), then add 11–16.
+    So in total about **23 weeks at ~5 hours per week** (the end-of-notebook projects are included). You can go faster; you should not skip the tests or projects.
+    If time is short, do 1–12 and 19 first (your main goal: GeoPandas, Shapely, SQL and some PostGIS), then add 13–18.
 
     This order follows two well-known open courses: the University of Helsinki's
     [Automating GIS Processes](https://autogis-site.readthedocs.io/) (Shapely → GeoPandas → CRS → spatial joins/overlay → rasters)
@@ -78,6 +81,11 @@ def build():
 
     Every notebook ends with a **🏁 Final test**: *"We want to do A, B, C, D in Riverton — how do you do it with this library?"*
     plus **modelling questions**: *"We want to check X in the region — how do we model it geographically?"*
+
+    After the test comes a **🏗️ Project**: a small real job with **its own new data layer** (streets, buildings, census tracts,
+    GPS tracks, a messy data delivery, a temperature raster, bike-share tables…). You answer 4–6 tasks, publish your result to
+    **PostGIS**, and finish the project in **QGIS** (connect to the database, style the layer, make a map).
+    Daily picture: the exercises are practising scales on the piano; the project is playing a whole piece.
     """)
     nb.md("""
     ## The 8 types of spatial question (used in all Level 4 exercises)
@@ -97,7 +105,22 @@ def build():
 
     Keep this table open. In Level 4 you will be asked: *"Step 1 · What type of question is this?"*
     """)
-    nb.md("## Check your environment\n\nRun the next cell. If something is missing, install it with `pip install -r ../requirements.txt`.")
+    nb.md("""
+    ## Install once: Python packages, the database and QGIS
+
+    The projects use a **PostgreSQL/PostGIS database** and **QGIS** from the very first notebook, so install them now (about 20 minutes).
+
+    1. **Python packages:** `pip install -r ../requirements.txt` (or use conda: `conda install -c conda-forge geopandas rasterio pysal psycopg sqlalchemy geoalchemy2 jupyterlab`).
+    2. **The database (Docker, recommended):** install Docker Desktop, then run once:
+       ```bash
+       docker run --name geotrain-db -e POSTGRES_USER=geo -e POSTGRES_PASSWORD=geo -e POSTGRES_DB=geotrain -p 5432:5432 -d postgis/postgis:16-3.4
+       ```
+       Next time you only need `docker start geotrain-db`. (No Docker? See the other options in `B0_postgis_setup`.)
+    3. **QGIS:** install the long-term release from qgis.org (Windows: OSGeo4W installer; Mac: QGIS.app; Linux: `apt install qgis qgis-provider-grass`).
+       Group D also uses GRASS and SAGA — see `D0_desktop_gis_setup` when you get there.
+    4. **Connect QGIS to the database** (you will do this in every project):
+    """ + "\n\n" + QGIS_HELP)
+    nb.md("## Check your environment\n\nRun the next cells. If something is missing, install it as described above.")
     nb.code("""
     import importlib, shutil
     for lib in ["shapely", "pyproj", "geopandas", "pyogrio", "fiona", "rasterio",
@@ -111,6 +134,19 @@ def build():
     # desktop engines (group D) are programs, not Python packages
     for tool in ["qgis_process", "gdalinfo", "ogr2ogr", "grass", "saga_cmd"]:
         print(("✅ " if shutil.which(tool) else "⚪ ") + f"{tool:12s}" + ("" if shutil.which(tool) else " not found (needed only for group D, see D0)"))
+    """)
+    nb.code("""
+    # Is the database running? (Needed for the SQL notebooks, group B and all projects.)
+    import sys; from pathlib import Path; sys.path.insert(0, str(Path.cwd().parent))
+    from geotrain.db import DSN
+    try:
+        import psycopg
+        with psycopg.connect(DSN, connect_timeout=3) as conn:
+            print("✅ database:", conn.execute("SELECT version()").fetchone()[0][:40])
+            conn.execute("CREATE EXTENSION IF NOT EXISTS postgis")
+            print("✅ PostGIS:", conn.execute("SELECT postgis_version()").fetchone()[0])
+    except Exception as e:
+        print("⚪ database not reachable at", DSN, "->", type(e).__name__, "(start it with: docker start geotrain-db)")
     """)
     nb.md("## Meet Riverton, your training town\n\nAll notebooks use the same fictional town, so you learn the libraries, not a new dataset each time.")
     nb.code(SETUP)

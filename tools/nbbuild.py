@@ -105,6 +105,30 @@ class NB:
             for block in re.findall(r"```python\n(.*?)```", _clean(model), flags=re.S):
                 self.checks.append(block)
 
+    def project(self, title, brief, data, tasks, setup=None, qgis=None, deliver=None):
+        """End-of-notebook project with its own data layer(s) and a QGIS / PostGIS part.
+
+        data  = list of (layer, description); tasks = list of (text, model_answer_with_code).
+        """
+        rows = "\n".join(f"| `{l}` | {d} |" for l, d in data)
+        self.md(f"---\n## 🏗️ Project — {title}\n\n**The brief.** {_clean(brief)}\n\n"
+                f"**Your data** (made for this project, in `data/projects/`):\n\n| Layer / file | What it holds |\n|---|---|\n{rows}\n\n"
+                "**How to work:** for each task write the plan in words, then the code, then one sentence with the result. "
+                "Model answers are hidden; open them only after you tried. The last part happens in **QGIS**.")
+        if setup:
+            self.code(setup)
+        for i, (text, model) in enumerate(tasks, 1):
+            self.md(f"### Project task {i}\n\n{_clean(text)}")
+            self.md("✍️ **Your plan and result:** …")
+            self.code("# your code", run=False)
+            self.md(f"<details><summary>✅ <b>Model answer</b></summary>\n\n{_clean(model)}\n\n</details>")
+            for block in re.findall(r"```python\n(.*?)```", _clean(model), flags=re.S):
+                self.checks.append(block)
+        if qgis:
+            self.md("### 🗺️ Project in QGIS\n\n" + _clean(qgis) + "\n\n" + QGIS_HELP)
+        if deliver:
+            self.md("### 📦 Deliverables (tick when done)\n\n" + "\n".join(f"- [ ] {d}" for d in deliver))
+
     def reflect(self, text):
         self.md(f"### 🪞 Reflection — your long-term plan\n\n{_clean(text)}\n\n✍️ **Your answer:** …")
 
@@ -125,6 +149,20 @@ class NB:
         path = NB_DIR / f"{self.name}.ipynb"
         path.write_text(json.dumps(nb, indent=1, ensure_ascii=False) + "\n")
         return path
+
+
+QGIS_HELP = """<details><summary>🔌 <b>How to connect QGIS to PostGIS</b> (once per computer)</summary>
+
+1. Start the database (Docker: `docker start geotrain-db`).
+2. In QGIS, open the **Browser** panel → right-click **PostgreSQL** → **New Connection…**
+3. Name `geotrain`, Host `localhost`, Port `5432`, Database `geotrain`.
+   Authentication → *Basic*: user `geo`, password `geo` (tick *Store*). Click **Test Connection** → OK.
+4. Expand **geotrain → projects** (the schema) and **drag a table onto the map**.
+5. To run SQL and see the result on the map: **Database → DB Manager → PostGIS → geotrain → SQL Window**.
+   Write the query → **Execute** → tick **Load as new layer**, choose the geometry column and a unique id column → **Load**.
+6. To open a GeoPackage instead: drag the `.gpkg` file from your file manager into QGIS.
+
+</details>"""
 
 
 SETUP = '''

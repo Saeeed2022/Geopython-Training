@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_a
 
 
 def build():
@@ -554,6 +555,7 @@ def build():
         Recommendation: 2 first (the river is a real barrier in Riverton), then 1.
         """),
     ])
+    projects_a.p_a3(nb)
     nb.reflect("""
     1. Which question **type** is most important in your own work (e.g. PhD on urban space)? Write one question of that type about your study area.
     2. Which data would you need, and which GeoPandas steps (in order) would you use?

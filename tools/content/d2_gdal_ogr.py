@@ -1,5 +1,6 @@
 from nbbuild import NB, SETUP
 from d0_desktop_setup import DSETUP
+import projects_d
 
 
 def build():
@@ -348,6 +349,7 @@ def build():
         Or **kriging** of the residuals (regression-kriging). Recommendation: land-use regression, because pollution is driven by roads, which IDW cannot see.
         """),
     ])
+    projects_d.p_d2(nb)
     nb.reflect("""
     Which file conversions do you do by hand today? Write the one `ogr2ogr` or `gdalwarp` command that would replace them.
     """)

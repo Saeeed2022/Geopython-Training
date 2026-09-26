@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_a
 
 GRID = '''
 import numpy as np
@@ -402,6 +403,7 @@ def build():
         7. Report limits: ecological fallacy (area results do not describe individuals), MAUP, causality.
         """),
     ])
+    projects_a.p_a6(nb)
     nb.reflect("""
     Which spatial-statistics question appears in your PhD topic? Write it in one sentence, and name the weights and the method you would start with.
     """)

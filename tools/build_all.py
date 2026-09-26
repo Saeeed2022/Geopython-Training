@@ -7,7 +7,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "content"))
 
-MODULES = ["n00_start", "a1_shapely", "a2_pyproj", "a3_geopandas", "a4_pyogrio_fiona", "a5_rasterio", "a6_pysal",
+MODULES = ["n00_start", "a1_shapely", "a2_pyproj", "a3_geopandas", "a4_pyogrio_fiona", "a5_rasterio", "a6_pysal", "s1_sql_foundations", "s2_postgresql",
            "b0_postgis_setup", "b1_postgis_internal", "b2_psycopg", "b3_sqlalchemy", "b4_geopandas_postgis",
            "d0_desktop_setup", "d1_qgis_native", "d2_gdal_ogr", "d3_grass", "d4_saga", "c_capstone"]
 

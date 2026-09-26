@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_a
 
 
 def build():
@@ -280,6 +281,7 @@ def build():
         Recommendation: option 1 — it is short, exact for 'distance from one point', and works with Shapely/GeoPandas.
         """),
     ])
+    projects_a.p_a2(nb)
     nb.reflect("""
     1. Which CRS will you use for your own study area? Look it up with `query_utm_crs_info` or your national mapping agency.
     2. Write down one dataset you already have and its CRS. Is it geographic or projected?

@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_a
 
 
 def build():
@@ -454,6 +455,7 @@ def build():
         Recommendation: use the buffer only as a first filter, then refine with the DEM.
         """),
     ])
+    projects_a.p_a1(nb)
     nb.reflect("""
     1. Which Shapely commands do you think you will use **most** in your own project? Why?
     2. Write one question from your own field (e.g. the city you study) that you can now answer with a buffer, an intersection or a distance.

@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_b
 
 
 def build():
@@ -321,6 +322,7 @@ def build():
         Why: heavy spatial work near the data, with indexes; only 9 rows travel to Python; everyone sees the same numbers.
         """),
     ])
+    projects_b.p_b4(nb)
     nb.reflect("""
     Draw (on paper) your own ideal workflow: where does your data live, where is it analysed, where is the result published? Which B-notebook skills does each arrow need?
     """)

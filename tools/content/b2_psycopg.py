@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_b
 
 
 def build():
@@ -343,6 +344,7 @@ def build():
         "This allows SQL injection: a user can type text that changes your query and reads or deletes data. Always pass values as parameters (`%s`) and let psycopg insert them."
         """),
     ])
+    projects_b.p_b2(nb)
     nb.reflect("""
     Will you mostly *read* from a database someone else runs, or *build* your own? Which Psycopg skills matter most for that (parameters, COPY, transactions)?
     """)

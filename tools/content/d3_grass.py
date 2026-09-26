@@ -1,5 +1,6 @@
 from nbbuild import NB, SETUP
 from d0_desktop_setup import DSETUP
+import projects_d
 
 
 def build():
@@ -373,6 +374,7 @@ def build():
         Output = travel time in seconds → threshold 600 s → join to houses → share per neighbourhood. Lower the walking speed for elderly people (e.g. 3 km/h instead of 5) and compare.
         """),
     ])
+    projects_d.p_d3(nb)
     nb.reflect("""
     Is there a water, terrain or visibility question in your research area? Write it, and list the GRASS tools you would chain.
     """)

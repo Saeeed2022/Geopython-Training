@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_a
 
 
 def build():
@@ -322,6 +323,7 @@ def build():
         This is a small **ETL** (Extract, Transform, Load) process — the same idea as loading data into PostGIS later.
         """),
     ])
+    projects_a.p_a4(nb)
     nb.reflect("""
     Which file formats does your own data come in? Write the one-line Pyogrio command you would use to read only your study area.
     """)

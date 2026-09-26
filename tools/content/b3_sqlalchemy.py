@@ -1,4 +1,5 @@
 from nbbuild import NB, SETUP
+import projects_b
 
 
 def build():
@@ -272,6 +273,7 @@ def build():
         Optional: table `users`, and a table `streets` (LINESTRING) to snap reports to the nearest street.
         """),
     ])
+    projects_b.p_b3(nb)
     nb.reflect("""
     Do you expect to build an app one day, or mainly to analyse? Write which of Core / ORM / plain `text()` you will actually use, and why.
     """)

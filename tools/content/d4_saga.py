@@ -1,5 +1,6 @@
 from nbbuild import NB, SETUP
 from d0_desktop_setup import DSETUP
+import projects_d
 
 
 def build():
@@ -345,6 +346,7 @@ def build():
         6. Store and share results → **PostGIS** (B4).
         """),
     ])
+    projects_d.p_d4(nb)
     nb.reflect("""
     Which terrain or water index would help your own research question? Find the SAGA tool for it with `saga_cmd ta_<library>`.
     """)
