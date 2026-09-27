@@ -248,6 +248,8 @@ def publish(layers: dict, schema: str = "projects"):
     with eng.begin() as conn:
         conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema}"))
     for name, df in layers.items():
+        with eng.begin() as conn:          # drop first, together with views built on it, so re-running works
+            conn.execute(text(f'DROP TABLE IF EXISTS {schema}."{name}" CASCADE'))
         if isinstance(df, gpd.GeoDataFrame):
             df.to_postgis(name, eng, schema=schema, if_exists="replace", index=False)
         else:

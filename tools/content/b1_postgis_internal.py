@@ -209,7 +209,7 @@ def build():
           starter="""
           with connect() as conn:
               conn.execute("SET postgis.gdal_enabled_drivers = '____'")
-              conn.execute("DROP TABLE IF EXISTS dem")
+              conn.execute("DROP TABLE IF EXISTS dem CASCADE")   # CASCADE: also views built on it (projects)
               conn.execute("CREATE TABLE dem AS SELECT 1 AS rid, ____(%s) AS rast", [(DATA_DIR / "dem.tif").read_bytes()])
               conn.commit()
               print(conn.execute("SELECT ST_Width(rast), ST_Height(rast), ST_SRID(rast), ST_PixelWidth(rast) FROM dem").fetchone())
@@ -218,7 +218,7 @@ def build():
           solution="""
           with connect() as conn:
               conn.execute("SET postgis.gdal_enabled_drivers = 'GTiff'")
-              conn.execute("DROP TABLE IF EXISTS dem")
+              conn.execute("DROP TABLE IF EXISTS dem CASCADE")   # CASCADE: also views built on it (projects)
               conn.execute("CREATE TABLE dem AS SELECT 1 AS rid, ST_FromGDALRaster(%s) AS rast", [(DATA_DIR / "dem.tif").read_bytes()])
               conn.commit()
               print(conn.execute("SELECT ST_Width(rast), ST_Height(rast), ST_SRID(rast), ST_PixelWidth(rast) FROM dem").fetchone())
