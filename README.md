@@ -77,6 +77,8 @@ docker run --name geotrain-db -e POSTGRES_USER=geo -e POSTGRES_PASSWORD=geo -e P
            -p 5432:5432 -d postgis/postgis:16-3.4
 ```
 
+**Windows:** follow [`INSTALL_WINDOWS.md`](INSTALL_WINDOWS.md) (installs everything into `C:\Geopython`).
+
 Start the database at the beginning (`00_START_HERE` shows how): the SQL notebooks, group B and every project use it.
 If your database address is different, set `GEOTRAIN_DSN` (the default is `postgresql://geo:geo@localhost:5432/geotrain`).
 `B0_postgis_setup` has more options (installers, Colab).

@@ -110,6 +110,8 @@ def build():
 
     The projects use a **PostgreSQL/PostGIS database** and **QGIS** from the very first notebook, so install them now (about 20 minutes).
 
+    **On Windows, follow `INSTALL_WINDOWS.md` in the course folder** (everything goes into `C:\\Geopython`). Short version:
+
     1. **Python packages:** `pip install -r ../requirements.txt` (or use conda: `conda install -c conda-forge geopandas rasterio pysal psycopg sqlalchemy geoalchemy2 jupyterlab`).
     2. **The database (Docker, recommended):** install Docker Desktop, then run once:
        ```bash

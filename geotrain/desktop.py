@@ -20,6 +20,7 @@ ENV = dict(os.environ, QT_QPA_PLATFORM="offscreen")
 ENV.setdefault("XDG_RUNTIME_DIR", "/tmp/runtime-" + str(os.getuid()) if hasattr(os, "getuid") else "")
 
 _CANDIDATES = ["qgis_process", "qgis_process-qgis.bat", "qgis_process-qgis-ltr.bat",
+               r"C:\OSGeo4W\bin\qgis_process-qgis-ltr.bat", r"C:\OSGeo4W\bin\qgis_process-qgis.bat",
                "/Applications/QGIS.app/Contents/MacOS/bin/qgis_process",
                "/Applications/QGIS-LTR.app/Contents/MacOS/bin/qgis_process"]
 
@@ -32,6 +33,11 @@ def qgis_process_path():
         found = shutil.which(c) or (c if os.path.exists(c) else None)
         if found:
             return found
+    if os.name == "nt":                      # QGIS stand-alone installer: C:\Program Files\QGIS 3.xx\bin\...
+        import glob
+        hits = sorted(glob.glob(r"C:\Program Files\QGIS*\bin\qgis_process-qgis*.bat"))
+        if hits:
+            return hits[-1]
     return None
 
 
@@ -124,5 +130,7 @@ def enable_grass():
 
 
 def quote(path):
-    """Quote a path for sh() commands."""
+    """Quote a path for sh() commands (double quotes on Windows, POSIX quoting elsewhere)."""
+    if os.name == "nt":
+        return subprocess.list2cmdline([str(path)])
     return shlex.quote(str(path))

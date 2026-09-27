@@ -1,0 +1,31 @@
+# Conda environment for the course (Windows, macOS, Linux).
+#   mamba env create -f environment.yml
+#   conda activate geopython
+name: geopython
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  # group A
+  - shapely>=2.0
+  - pyproj
+  - geopandas>=1.0
+  - pyogrio
+  - fiona
+  - rasterio
+  - gdal            # also installs the GDAL/OGR command-line tools (ogr2ogr, gdalwarp, ...) used in D2
+  - pyarrow
+  - scipy
+  - matplotlib
+  - libpysal
+  - esda
+  - mapclassify
+  - spreg
+  - pointpats
+  # group S and B (database)
+  - psycopg
+  - sqlalchemy>=2.0
+  - geoalchemy2
+  # notebooks
+  - jupyterlab
+  - ipykernel

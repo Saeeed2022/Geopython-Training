@@ -320,7 +320,7 @@ def build():
         **A.** Export the neighbourhoods as a **Shapefile in EPSG:4326** with only `name` and `population`. Check the result with `ogrinfo`.
         """, """
         ```python
-        sh(f"ogr2ogr -overwrite -f 'ESRI Shapefile' -t_srs EPSG:4326 -select name,population {O}/nbh_4326.shp {G} neighbourhoods")
+        sh(f'ogr2ogr -overwrite -f "ESRI Shapefile" -t_srs EPSG:4326 -select name,population {O}/nbh_4326.shp {G} neighbourhoods')
         sh(f"ogrinfo -so {O}/nbh_4326.shp nbh_4326")
         ```
         """),

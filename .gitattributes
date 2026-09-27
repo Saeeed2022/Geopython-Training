@@ -1,0 +1,2 @@
+*.bat text eol=crlf
+*.ipynb text eol=lf

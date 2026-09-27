@@ -314,6 +314,9 @@ def build():
            scenario="Run a short GRASS workflow **without QGIS**: import the DEM, set the region, compute basins, and report the number of basins. Use a temporary GRASS project.",
            plan_hint="Write the GRASS commands in a small shell script and run `grass --tmp-location EPSG:32633 --exec bash script.sh` (GRASS 8.4+ also accepts `--tmp-project`). Commands: `r.in.gdal`, `g.region raster=`, `r.watershed`, `r.stats -c`.",
            starter="""
+           import os
+           if os.name == "nt":
+               print("On Windows: open the 'OSGeo4W Shell', type `grass --tmp-location EPSG:32633 --exec ...` or start GRASS and type the commands below one by one.")
            script = OUT / "grass_job.sh"
            script.write_text(f\"\"\"
            r.in.gdal -o input={DEM} output=dem --quiet
@@ -321,9 +324,13 @@ def build():
            r.watershed -s elevation=dem threshold=400 basin=basins --quiet
            echo "basins: $(r.stats -n basins | wc -l)"
            \"\"\")
-           sh(f"grass --tmp-location EPSG:32633 --exec bash {quote(script)}")
+           if os.name != "nt":
+               sh(f"grass --tmp-location EPSG:32633 --exec bash {quote(script)}")
            """,
            solution="""
+           import os
+           if os.name == "nt":
+               print("On Windows: open the 'OSGeo4W Shell', type `grass --tmp-location EPSG:32633 --exec ...` or start GRASS and type the commands below one by one.")
            script = OUT / "grass_job.sh"
            script.write_text(f\"\"\"
            r.in.gdal -o input={DEM} output=dem --quiet
@@ -331,7 +338,8 @@ def build():
            r.watershed -s elevation=dem threshold=400 basin=basins --quiet
            echo "basins: $(r.stats -n basins | wc -l)"
            \"\"\")
-           sh(f"grass --tmp-location EPSG:32633 --exec bash {quote(script)}")
+           if os.name != "nt":
+               sh(f"grass --tmp-location EPSG:32633 --exec bash {quote(script)}")
            """,
            answer="A native GRASS session keeps data inside GRASS between steps, so long chains are faster than importing and exporting at every QGIS call. For Python inside GRASS, use `grass.script` (`gs.run_command(...)`) or the `grass.jupyter` package.")
 
